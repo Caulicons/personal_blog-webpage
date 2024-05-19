@@ -9,10 +9,10 @@ const Welcome: FunctionComponent<WelcomeProps> = () => {
         <div className="flex flex-col items-center justify-center gap-6 text-center">
           <div className="grid gap-3">
             <h2 className="shadow- text-7xl font-bold">Welcome !</h2>
-            <p className="text-2xl">One place for your thoughts.</p>
+            <p className="text-2xl">A place for your thoughts.</p>
           </div>
           <div></div>
-          <button className=" w-auto  rounded-xl bg-white p-2   px-9 text-xl font-semibold uppercase text-black shadow-2xl">
+          <button className="w-auto rounded-xl border-2 border-solid border-white bg-white p-2 px-9 text-xl font-semibold uppercase text-black shadow-2xl hover:bg-transparent hover:text-white">
             Posts 📌
           </button>
         </div>
