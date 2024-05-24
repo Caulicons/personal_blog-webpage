@@ -1,11 +1,9 @@
-import { FunctionComponent } from 'react';
 import Container from '../../atoms/container/index.container';
 import Section from '../../atoms/section/index.section';
 import Button from '../../atoms/button/index.button';
+import loggedOnly from '../../wrappers/loggedOnly/index.logged';
 
-interface WelcomeProps {}
-
-const Welcome: FunctionComponent<WelcomeProps> = () => {
+const Welcome = () => {
   return (
     <Section className="flex h-[calc(100vh-72px)]  w-full select-none justify-center bg-green-600 text-white ">
       <Container className="grid grid-cols-2 items-center justify-between">
@@ -14,7 +12,6 @@ const Welcome: FunctionComponent<WelcomeProps> = () => {
             <h2 className="shadow- text-7xl font-bold">Welcome !</h2>
             <p className="text-2xl">A place for your thoughts.</p>
           </div>
-
           <Button
             className="w-3/5 text-xl font-semibold uppercase"
             variant="secondary"
@@ -30,4 +27,7 @@ const Welcome: FunctionComponent<WelcomeProps> = () => {
   );
 };
 
-export default Welcome;
+Welcome.displayName = 'Welcome';
+export default loggedOnly(Welcome);
+
+/* export default Welcome; */

@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import Main from '../../atoms/main/index.main';
 import Section from '../../atoms/section/index.section';
 import Typography from '../../atoms/typography/index.typography';
@@ -9,6 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import LabeledInput from '../../molecules/LabeledInput/index.labeledInput';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../atoms/button/index.button';
+import { isValidToken, loginUser } from '../../../services/auth';
+import Cookies from 'js-cookie';
 
 const loginSchema = z.object({
   email: z
@@ -24,7 +26,8 @@ interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasRequestError, setHasRequestError] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -33,9 +36,25 @@ const Login: FunctionComponent<LoginProps> = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  function handleLogin(data: LoginSchema) {
-    console.log(data);
+  useEffect(() => {
+    const token = Cookies.get('token');
+    async function checkingToken(token: string) {
+      if (await isValidToken(token)) navigate('/');
+    }
+    if (token) checkingToken(token);
+  }, [navigate]);
+
+  async function handleLogin(data: LoginSchema) {
+    setIsLoading(true);
+    try {
+      await loginUser(data);
+      navigate('/');
+    } catch {
+      setHasRequestError(true);
+    }
+    setIsLoading(false);
   }
+
   return (
     <Main>
       <Section className="flex h-[calc(100vh-72px)] w-full select-none justify-center">
@@ -50,24 +69,39 @@ const Login: FunctionComponent<LoginProps> = () => {
               </Typography>
             </div>
             <form
+              onChange={() => {
+                if (hasRequestError === true) setHasRequestError(false);
+              }}
               onSubmit={handleSubmit(handleLogin)}
               className="grid w-3/5 flex-col gap-9"
             >
               <div className="grid gap-4">
                 <LabeledInput
-                  error={errors.email?.message}
+                  value={'root@root.com'}
+                  error={errors.email?.message || hasRequestError}
                   label="Email"
                   type="email"
                   {...register('email')}
                 />
                 <LabeledInput
-                  error={errors.password?.message}
+                  error={errors.password?.message || hasRequestError}
                   label="Password"
                   type="password"
                   {...register('password')}
                 />
+                {hasRequestError && (
+                  <Typography className="text-left text-sm text-red-500">
+                    ❌Invalid Email or Password.
+                  </Typography>
+                )}
               </div>
-              <Button type="submit">Enter</Button>
+              <Button
+                disabled={hasRequestError}
+                isLoading={isLoading}
+                type="submit"
+              >
+                Enter
+              </Button>
               <Typography className="text-center font-normal text-black">
                 Don't have an account?{' '}
                 <span

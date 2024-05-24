@@ -2,14 +2,14 @@ import { InputHTMLAttributes, forwardRef, useRef } from 'react';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
-  error: string | undefined;
+  error?: string | boolean;
+  showError?: boolean;
 };
 
 const LabeledInput = forwardRef<HTMLInputElement, InputProps>(
   ({ error, name, ...props }: InputProps, ref) => {
     /* TODO: Line two 19 at 24 Understand this better https://stackoverflow.com/questions/62238716/using-ref-current-in-react-forwardref */
     const myRef = useRef<HTMLInputElement | null>(null);
-
     return (
       <div className="text-start">
         {/* TODO: Study about relative and absolute again 😭 */}
@@ -37,7 +37,9 @@ const LabeledInput = forwardRef<HTMLInputElement, InputProps>(
             {props.label}
           </label>
         </div>
-        {error && <span className="ml-2 text-sm text-red-500">* {error}</span>}
+        {error && typeof error === 'string' && (
+          <span className="ml-2 text-sm text-red-500">* {error}</span>
+        )}
       </div>
     );
   },

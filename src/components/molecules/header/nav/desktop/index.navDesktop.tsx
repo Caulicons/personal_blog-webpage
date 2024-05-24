@@ -1,4 +1,6 @@
 import Link from '../../../../atoms/link/index.link';
+import { logoutUser } from '../../../../../services/auth';
+import { Stairs } from '@phosphor-icons/react';
 
 const NavDesktop = () => {
   const routes = [
@@ -21,6 +23,12 @@ const NavDesktop = () => {
             <Link to={path}>{name}</Link>
           </li>
         ))}
+        <Stairs
+          alt="Log Out"
+          size={32}
+          className="cursor-pointer"
+          onClick={logoutUser}
+        />
       </ul>
     </nav>
   );
