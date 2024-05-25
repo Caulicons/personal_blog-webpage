@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: 'https://personal-blog-api-cxnr.onrender.com/',
+  // baseURL: 'http://localhost:4000/',
 });
-
-export { api };

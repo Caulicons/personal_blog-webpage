@@ -1,59 +1,20 @@
 import { useForm } from 'react-hook-form';
-import Container from '../../atoms/container/index.container';
-import Main from '../../atoms/main/index.main';
-import Section from '../../atoms/section/index.section';
-import Typography from '../../atoms/typography/index.typography';
-import { z } from 'zod';
-import LabeledInput from '../../molecules/LabeledInput/index.labeledInput';
+import Container from '../../atoms/container/container.component';
+import Main from '../../atoms/main/main.component';
+import Section from '../../atoms/section/section.component';
+import Typography from '../../atoms/typography/typography.component';
+import LabeledInput from '../../molecules/LabeledInput/labeledInput.component';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../atoms/button/index.button';
+import Button from '../../atoms/button/button.component';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { isValidToken, registerUser } from '../../../services/auth';
-import { api } from '../../../utils/http';
-
-const registerScheme = z
-  .object({
-    username: z.string().min(1, 'username is required'),
-    email: z
-      .string()
-      .min(1, 'O Email é obrigatório.')
-      .email('Formato de e-mail inválido.'),
-    photo: z.string().trim().url('Formato de imagem inválido.'),
-    password: z.string().min(8, 'A senha tem no mínimo 8 caracteres').max(16),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas devem ser iguais',
-    path: ['confirmPassword'],
-  })
-  // check email
-  .refine(
-    async (data) => {
-      const emailAlreadyExist = await api.get(`/users/email/${data.email}`);
-      return !emailAlreadyExist.data;
-    },
-    {
-      message: 'email already exists',
-      path: ['email'],
-    },
-  )
-  // check username
-  .refine(
-    async (data) => {
-      const usernameAlreadyExist = await api.get(
-        `/users/username/${data.username}`,
-      );
-      return !usernameAlreadyExist.data;
-    },
-    {
-      message: 'username already exists',
-      path: ['username'],
-    },
-  );
-
-export type RegisterScheme = z.infer<typeof registerScheme>;
+import {
+  RegisterScheme,
+  registerUserScheme,
+} from '../../../schemas/user/register.schema';
+import { validatingToken } from '../../../services/auth/validToken.service';
+import { registerUser } from '../../../services/auth/register.service';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -64,35 +25,37 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterScheme>({
-    resolver: zodResolver(registerScheme),
+    resolver: zodResolver(registerUserScheme),
   });
 
   useEffect(() => {
     const token = Cookies.get('token');
     async function checkingToken(token: string) {
-      if (await isValidToken(token)) navigate('/');
+      if (await validatingToken(token)) navigate('/');
     }
     if (token) checkingToken(token);
   }, [navigate]);
 
   async function handleRegister(data: RegisterScheme) {
     setIsLoading(true);
-    try {
-      await registerUser(data);
-      // TODO: I have to fix my api to return a token instead go make login it is boring
-      navigate('/login');
-    } catch {
-      setHasRequestError(true);
-    }
+
+    // TODO: I have to fix my api to return a token instead go make login it is boring
+    const managedToRegister = await registerUser(data);
+    if (managedToRegister) return navigate('/login');
+
+    setHasRequestError(true);
+
     setIsLoading(false);
   }
 
   return (
     <Main>
-      <Section className="flex h-[calc(100vh-72px)] w-full  select-none justify-center">
+      <Section
+        className={`flex h-[calc(100vh-72px)] w-full  select-none justify-center ${isLoading && 'cursor-wait '}`}
+      >
         <Container className="grid w-full grid-cols-2 self-center">
           <div className="mt-5 h-3/5 select-none rounded-full bg-green-500">
-            <img className="" src="/register.svg" />
+            <img className="" src="/imgs/register.svg" />
           </div>
           <div className="flex flex-col items-center justify-center gap-9 text-center">
             <div className="grid gap-2">
@@ -112,13 +75,13 @@ export default function RegisterPage() {
                   error={errors.username?.message}
                   label="Username"
                   {...register('username')}
-                  value={'root6'}
+                  value={'root8'}
                 />
                 <LabeledInput
                   error={errors.email?.message}
                   label="Email"
                   {...register('email')}
-                  value={'root@root6.com'}
+                  value={'root@root8.com'}
                 />
                 <LabeledInput
                   error={errors.photo?.message}

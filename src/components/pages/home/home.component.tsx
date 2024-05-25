@@ -1,5 +1,5 @@
-import Main from '../../atoms/main/index.main';
-import Welcome from '../../organisms/welcome/index.welcome';
+import Main from '../../atoms/main/main.component';
+import Welcome from '../../organisms/welcome/welcome.component';
 
 function Home() {
   return (

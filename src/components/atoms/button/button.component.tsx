@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 import { FunctionComponent } from 'react';
-import { cn } from '../../../utils';
 import { CircleNotch } from '@phosphor-icons/react';
+import cn from '../../../utils/cn';
 
 type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'outlined';
@@ -15,9 +15,11 @@ const variants = cva(
       variant: {
         primary: ['bg-green-600  text-white hover:bg-green-700'],
         secondary: [
-          'border-white bg-white hover:bg-transparent text-black hover:text-white animate-spin',
+          'border-white bg-white hover:bg-transparent text-black hover:text-white ',
         ],
-        outlined: ['border-white bg-white hover:bg-transparent'],
+        outlined: [
+          'hover:border-white border-white bg-white bg-transparent hover:text-black hover:bg-white',
+        ],
       },
     },
     defaultVariants: {

@@ -1,14 +1,12 @@
-import Link from '../../../../atoms/link/index.link';
-import { logoutUser } from '../../../../../services/auth';
+import { logOutUser } from '../../../../../services/auth/logOut.service';
+import Link from '../../../../atoms/link/link.component';
 import { Stairs } from '@phosphor-icons/react';
 
 const NavDesktop = () => {
   const routes = [
-    { id: 1, name: 'Login', path: 'login' },
     { id: 2, name: 'Home', path: '/' },
     { id: 3, name: 'Posts', path: '/posts' },
     { id: 4, name: 'Theme', path: '/theme' },
-    { id: 5, name: 'Register Theme', path: '/register-theme' },
     { id: 6, name: 'Perfil', path: '/perfil' },
   ];
 
@@ -27,7 +25,7 @@ const NavDesktop = () => {
           alt="Log Out"
           size={32}
           className="cursor-pointer"
-          onClick={logoutUser}
+          onClick={logOutUser}
         />
       </ul>
     </nav>

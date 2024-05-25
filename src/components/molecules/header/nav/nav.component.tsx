@@ -1,4 +1,4 @@
-import NavDesktop from './desktop/index.navDesktop';
+import NavDesktop from './desktop/navDesktop.component';
 
 const Nav = () => {
   return (

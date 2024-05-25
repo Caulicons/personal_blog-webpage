@@ -1,24 +1,25 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Footer from './components/molecules/footer/index.footer';
-import Header from './components/molecules/header/index.header';
-import Home from './components/pages/home/index.home';
-import Login from './components/pages/login/index.login';
-import RegisterPage from './components/pages/register/index.register';
+import { Route, Routes } from 'react-router-dom';
+import Footer from './components/molecules/footer/footer.component';
+import Header from './components/molecules/header/header.component';
+import Home from './components/pages/home/home.component';
+import Login from './components/pages/login/login.component';
+import RegisterPage from './components/pages/register/register.component';
+import Posts from './components/pages/posts/post.component';
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route path="/posts" element={<Posts />} />
-          <Route path="/post/:id" element={<Post />} />
-          <Route path="*" element={<NotFound />} /> */}
+        <Route path="/posts" element={<Posts />} />
+        {/* <Route path="/post/:id" element={<Post />} />
+        <Route path="*" element={<NotFound />} /> */}
       </Routes>
       <Footer />
-    </BrowserRouter>
+    </>
   );
 }
 

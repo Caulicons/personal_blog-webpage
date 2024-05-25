@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
-import { cn } from '../../../utils';
 import { cva } from 'class-variance-authority';
+import cn from '../../../utils/cn';
 
 type Tag = {
   tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h6' | 'p';

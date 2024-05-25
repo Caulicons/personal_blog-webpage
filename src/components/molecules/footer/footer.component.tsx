@@ -1,8 +1,8 @@
 import { GithubLogo, LinkedinLogo, XLogo } from '@phosphor-icons/react';
 import { FunctionComponent } from 'react';
-import Container from '../../atoms/container/index.container';
-import Typography from '../../atoms/typography/index.typography';
-import Anchor from '../../atoms/anchor/index.anchor';
+import Container from '../../atoms/container/container.component';
+import Typography from '../../atoms/typography/typography.component';
+import Anchor from '../../atoms/anchor/anchor.component';
 
 interface FooterProps {}
 

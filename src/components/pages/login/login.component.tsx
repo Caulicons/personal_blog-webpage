@@ -1,26 +1,17 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import Main from '../../atoms/main/index.main';
-import Section from '../../atoms/section/index.section';
-import Typography from '../../atoms/typography/index.typography';
-import Container from '../../atoms/container/index.container';
+import Main from '../../atoms/main/main.component';
+import Section from '../../atoms/section/section.component';
+import Typography from '../../atoms/typography/typography.component';
+import Container from '../../atoms/container/container.component';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import LabeledInput from '../../molecules/LabeledInput/index.labeledInput';
+import LabeledInput from '../../molecules/LabeledInput/labeledInput.component';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../atoms/button/index.button';
-import { isValidToken, loginUser } from '../../../services/auth';
+import Button from '../../atoms/button/button.component';
 import Cookies from 'js-cookie';
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'O Email é obrigatório.')
-    .email('Formato de e-mail inválido.'),
-  password: z.string().min(8, 'A senha tem no mínimo 8 caracteres').max(16),
-});
-
-type LoginSchema = z.infer<typeof loginSchema>;
+import { LoginSchema, loginSchema } from '../../../schemas/user/login.schema';
+import { logInto } from '../../../services/auth/login.service';
+import { validatingToken } from '../../../services/auth/validToken.service';
 
 interface LoginProps {}
 
@@ -39,25 +30,26 @@ const Login: FunctionComponent<LoginProps> = () => {
   useEffect(() => {
     const token = Cookies.get('token');
     async function checkingToken(token: string) {
-      if (await isValidToken(token)) navigate('/');
+      if (await validatingToken(token)) navigate('/');
     }
     if (token) checkingToken(token);
   }, [navigate]);
 
   async function handleLogin(data: LoginSchema) {
     setIsLoading(true);
-    try {
-      await loginUser(data);
-      navigate('/');
-    } catch {
-      setHasRequestError(true);
-    }
+
+    const managedToLogged = await logInto(data);
+    if (managedToLogged) return navigate('/');
+
+    setHasRequestError(true);
     setIsLoading(false);
   }
 
   return (
     <Main>
-      <Section className="flex h-[calc(100vh-72px)] w-full select-none justify-center">
+      <Section
+        className={`flex h-[calc(100vh-72px)] w-full select-none justify-center ${isLoading && 'cursor-wait '}`}
+      >
         <Container className="grid w-full grid-cols-2 self-center">
           <div className="flex flex-col items-center justify-center gap-9 text-center">
             <div className="grid gap-2">
@@ -77,7 +69,7 @@ const Login: FunctionComponent<LoginProps> = () => {
             >
               <div className="grid gap-4">
                 <LabeledInput
-                  value={'root@root.com'}
+                  value={'root@root8.com'}
                   error={errors.email?.message || hasRequestError}
                   label="Email"
                   type="email"
@@ -99,6 +91,7 @@ const Login: FunctionComponent<LoginProps> = () => {
                 disabled={hasRequestError}
                 isLoading={isLoading}
                 type="submit"
+                className={`${isLoading && 'cursor-wait opacity-50'} `}
               >
                 Enter
               </Button>
@@ -115,8 +108,8 @@ const Login: FunctionComponent<LoginProps> = () => {
               </Typography>
             </form>
           </div>
-          <div className="mt-5 h-3/5 select-none rounded-full bg-green-600/85">
-            <img className="" src="/login.svg" />
+          <div className="mt-5 h-3/5 select-none   rounded-full bg-green-600/85">
+            <img className="" src="/imgs/login.svg" />
           </div>
         </Container>
       </Section>
