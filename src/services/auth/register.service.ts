@@ -1,5 +1,5 @@
 import { RegisterScheme } from '../../schemas/user/register.schema';
-import { api } from '../../utils/http';
+import { api, handleServerError } from '../../utils/http';
 
 export const registerUser = async (
   data: Omit<RegisterScheme, 'confirmPassword'>,
@@ -9,7 +9,7 @@ export const registerUser = async (
     if (res.status !== 201) throw new Error(JSON.stringify(res));
     return true;
   } catch (e) {
-    console.log(e);
+    handleServerError(e);
     return false;
   }
 };

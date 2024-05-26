@@ -1,46 +1,42 @@
 import Container from '../../atoms/container/container.component';
 import Section from '../../atoms/section/section.component';
 import Button from '../../atoms/button/button.component';
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import { validatingToken } from '../../../services/auth/validToken.service';
+import { useContext } from 'react';
+
 import Link from '../../atoms/link/link.component';
 import { quacking } from '../../../utils/quack';
+import { UserContext, UserContextSchema } from '../../../contexts/user.context';
+import Typography from '../../atoms/typography/typography.component';
 
 const Welcome = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    const token = Cookies.get('token');
-
-    async function checkToken(token: string) {
-      const isValidToken = await validatingToken(token);
-
-      if (isValidToken) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    }
-
-    if (!token) setIsLoggedIn(false);
-    else checkToken(token);
-  }, []);
+  const { user, isAuthenticated } = useContext(
+    UserContext,
+  ) as UserContextSchema;
 
   return (
     <Section className="flex h-[calc(100vh-72px)]  w-full select-none justify-center bg-green-600 text-white ">
       <Container className="grid grid-cols-2 items-center justify-between">
         <div className="flex flex-col items-center justify-center gap-9 text-center">
           <div className="grid gap-3">
-            <h2 className="shadow- text-6xl font-bold">
-              Welcome,{' '}
-              <span className="cursor-pointer" onClick={quacking}>
-                🦆
-              </span>{' '}
-              !{' '}
-            </h2>
+            {isAuthenticated ? (
+              <Typography tag="h2" variant="h2" className="text-4xl">
+                Welcome back, {user.username} !
+              </Typography>
+            ) : (
+              <Typography tag="h2" variant="h2" className="text-4xl">
+                Welcome to Quack{' '}
+                <span
+                  className="text-6xl hover:cursor-pointer"
+                  onClick={() => quacking()}
+                >
+                  🦆
+                </span>{' '}
+                !
+              </Typography>
+            )}
             <p className="text-xl">A place for your thoughts.</p>
           </div>
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <Button
               className="w-3/5  text-xl font-semibold uppercase"
               variant="secondary"

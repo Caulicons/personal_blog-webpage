@@ -35,7 +35,6 @@ const Button: FunctionComponent<ButtonProps> = ({
   className,
   ...props
 }) => {
-  //const loadingStyle = isLoading ? 'animate-spin' : '';
   return (
     <button
       disabled={isLoading}

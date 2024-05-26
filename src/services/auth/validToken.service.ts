@@ -1,18 +1,19 @@
 import Cookies from 'js-cookie';
-import { api } from '../../utils/http';
+import { api, handleServerError } from '../../utils/http';
+import { UserInfoSchema } from '../../schemas/user/userContext.schema';
 
 export const validatingToken = async (token: string) => {
   try {
-    const res = await api.get('auth/profile', {
+    const res = await api.get<UserInfoSchema>('auth/profile', {
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     });
     if (res.status !== 200) throw new Error(JSON.stringify(res));
-    return true;
+    return res.data;
   } catch (e) {
-    console.log(e);
     Cookies.remove('token');
+    handleServerError(e);
     return false;
   }
 };

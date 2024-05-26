@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'react';
 import Main from '../../atoms/main/main.component';
-import loggedOnly from '../../wrappers/loggedOnly/logged.component';
 
 interface PostsProps {}
 
@@ -12,4 +11,4 @@ const Posts: FunctionComponent<PostsProps> = () => {
   );
 };
 
-export default loggedOnly(Posts);
+export default Posts;

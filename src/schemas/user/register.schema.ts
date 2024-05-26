@@ -1,16 +1,12 @@
 import { z } from 'zod';
-import { api } from '../../utils/http';
+import { api, handleServerError } from '../../utils/http';
+import { userSchema } from './user.schema';
 
-export const registerUserScheme = z
-  .object({
-    username: z.string().min(1, 'username is required'),
-    email: z
-      .string()
-      .min(1, 'O Email é obrigatório.')
-      .email('Formato de e-mail inválido.'),
-    photo: z.string().trim().url('Formato de imagem inválido.'),
-    password: z.string().min(8, 'A senha tem no mínimo 8 caracteres').max(16),
-    confirmPassword: z.string(),
+export const registerUserScheme = userSchema
+  .omit({
+    id: true,
+    type: true,
+    posts: true,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'As senhas devem ser iguais',
@@ -18,8 +14,12 @@ export const registerUserScheme = z
   })
   .refine(
     async (data) => {
-      const emailAlreadyExist = await api.get(`/users/email/${data.email}`);
-      return !emailAlreadyExist.data;
+      try {
+        const emailAlreadyExist = await api.get(`/users/email/${data.email}`);
+        return !emailAlreadyExist.data;
+      } catch (e) {
+        handleServerError(e);
+      }
     },
     {
       message: 'email already exists',
@@ -28,10 +28,14 @@ export const registerUserScheme = z
   )
   .refine(
     async (data) => {
-      const usernameAlreadyExist = await api.get(
-        `/users/username/${data.username}`,
-      );
-      return !usernameAlreadyExist.data;
+      try {
+        const usernameAlreadyExist = await api.get(
+          `/users/username/${data.username}`,
+        );
+        return !usernameAlreadyExist.data;
+      } catch (e) {
+        handleServerError(e);
+      }
     },
     {
       message: 'username already exists',

@@ -1,15 +1,24 @@
-import { logOutUser } from '../../../../../services/auth/logOut.service';
+import { useContext } from 'react';
 import Link from '../../../../atoms/link/link.component';
 import { Stairs } from '@phosphor-icons/react';
+import {
+  UserContext,
+  UserContextSchema,
+} from '../../../../../contexts/user.context';
 
 const NavDesktop = () => {
-  const routes = [
+  const { isAuthenticated, logOut, user } = useContext(
+    UserContext,
+  ) as UserContextSchema;
+
+  const routesLogged = [
     { id: 2, name: 'Home', path: '/' },
     { id: 3, name: 'Posts', path: '/posts' },
-    { id: 4, name: 'Theme', path: '/theme' },
-    { id: 6, name: 'Perfil', path: '/perfil' },
   ];
 
+  const routesWithOutLogged = [{ id: 1, name: 'Home', path: '/' }];
+
+  const routes = isAuthenticated ? routesLogged : routesWithOutLogged;
   return (
     <nav>
       <ul className="flex gap-2">
@@ -21,12 +30,24 @@ const NavDesktop = () => {
             <Link to={path}>{name}</Link>
           </li>
         ))}
-        <Stairs
-          alt="Log Out"
-          size={32}
-          className="cursor-pointer"
-          onClick={logOutUser}
-        />
+
+        {isAuthenticated && (
+          <>
+            <li>
+              <img
+                className=" h-11 w-11 rounded-full "
+                src={user.photo}
+                alt=""
+              />
+            </li>
+            <Stairs
+              alt="Log Out"
+              size={32}
+              className="cursor-pointer"
+              onClick={logOut}
+            />
+          </>
+        )}
       </ul>
     </nav>
   );

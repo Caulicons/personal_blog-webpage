@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 import Main from '../../atoms/main/main.component';
 import Section from '../../atoms/section/section.component';
 import Typography from '../../atoms/typography/typography.component';
@@ -10,15 +10,20 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../atoms/button/button.component';
 import Cookies from 'js-cookie';
 import { LoginSchema, loginSchema } from '../../../schemas/user/login.schema';
-import { logInto } from '../../../services/auth/login.service';
+import { UserContext, UserContextSchema } from '../../../contexts/user.context';
 import { validatingToken } from '../../../services/auth/validToken.service';
+import { logInto } from '../../../services/auth/login.service';
 
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasRequestError, setHasRequestError] = useState<boolean>(false);
+  const [requestErrorMessage, setRequestErrorMessage] = useState<string>('');
+  const { setIsAuthenticated, update } = useContext(
+    UserContext,
+  ) as UserContextSchema;
+
   const {
     register,
     handleSubmit,
@@ -27,6 +32,20 @@ const Login: FunctionComponent<LoginProps> = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  async function handleLogin(data: LoginSchema) {
+    setIsLoading(true);
+
+    const managedToLogged = await logInto(data);
+    if (managedToLogged) {
+      setIsAuthenticated(true);
+      update(managedToLogged);
+      return navigate('/');
+    }
+
+    setRequestErrorMessage('❌ Invalid credentials.');
+    setIsLoading(false);
+  }
+
   useEffect(() => {
     const token = Cookies.get('token');
     async function checkingToken(token: string) {
@@ -34,16 +53,6 @@ const Login: FunctionComponent<LoginProps> = () => {
     }
     if (token) checkingToken(token);
   }, [navigate]);
-
-  async function handleLogin(data: LoginSchema) {
-    setIsLoading(true);
-
-    const managedToLogged = await logInto(data);
-    if (managedToLogged) return navigate('/');
-
-    setHasRequestError(true);
-    setIsLoading(false);
-  }
 
   return (
     <Main>
@@ -62,33 +71,33 @@ const Login: FunctionComponent<LoginProps> = () => {
             </div>
             <form
               onChange={() => {
-                if (hasRequestError === true) setHasRequestError(false);
+                if (requestErrorMessage) setRequestErrorMessage('');
               }}
               onSubmit={handleSubmit(handleLogin)}
               className="grid w-3/5 flex-col gap-9"
             >
               <div className="grid gap-4">
                 <LabeledInput
-                  value={'root@root8.com'}
-                  error={errors.email?.message || hasRequestError}
+                  value={'root@root5.com'}
+                  error={errors.email?.message || !!requestErrorMessage}
                   label="Email"
                   type="email"
                   {...register('email')}
                 />
                 <LabeledInput
-                  error={errors.password?.message || hasRequestError}
+                  error={errors.password?.message || !!requestErrorMessage}
                   label="Password"
                   type="password"
                   {...register('password')}
                 />
-                {hasRequestError && (
+                {!!requestErrorMessage && (
                   <Typography className="text-left text-sm text-red-500">
-                    ❌Invalid Email or Password.
+                    {requestErrorMessage}
                   </Typography>
                 )}
               </div>
               <Button
-                disabled={hasRequestError}
+                disabled={!!requestErrorMessage}
                 isLoading={isLoading}
                 type="submit"
                 className={`${isLoading && 'cursor-wait opacity-50'} `}

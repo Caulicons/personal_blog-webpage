@@ -1,25 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { validatingToken } from '../../../services/auth/validToken.service';
+import React, { useContext, useEffect } from 'react';
+import { UserContext, UserContextSchema } from '../../../contexts/user.context';
 
+/* In the old react docs he said that "Higher-order components are not commonly used in modern React code", but how i can resolve this session question that other way   */
 const loggedOnly = (WrappedComponent: React.ComponentType<any>) => {
-  return function CheckToken(props: any) {
-    const navigate = useNavigate();
-    const token = Cookies.get('token');
+  const CheckToken = (props: any) => {
+    const { isAuthenticated, logOut } = useContext(
+      UserContext,
+    ) as UserContextSchema;
+
     useEffect(() => {
-      async function checkingToken(token: string) {
-        if (!(await validatingToken(token))) navigate('login');
-      }
+      if (!isAuthenticated) logOut();
+    }, [logOut, isAuthenticated]);
 
-      if (!token) navigate('/');
-      else checkingToken(token);
-    }, [navigate, token]);
-
-    WrappedComponent.displayName = 'AuthCheckToken';
     return <WrappedComponent {...props} />;
   };
+
+  CheckToken.displayName = `LoggedOnly`;
+  return CheckToken;
 };
 
 export default loggedOnly;

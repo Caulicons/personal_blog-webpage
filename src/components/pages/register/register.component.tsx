@@ -19,7 +19,7 @@ import { registerUser } from '../../../services/auth/register.service';
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasRequestError, setHasRequestError] = useState<boolean>(false);
+  const [requestErrorMessage, setRequestErrorMessage] = useState<string>('');
   const {
     register,
     handleSubmit,
@@ -43,8 +43,7 @@ export default function RegisterPage() {
     const managedToRegister = await registerUser(data);
     if (managedToRegister) return navigate('/login');
 
-    setHasRequestError(true);
-
+    setRequestErrorMessage('❌ Something not work well, try again later.');
     setIsLoading(false);
   }
 
@@ -67,6 +66,9 @@ export default function RegisterPage() {
               </Typography>
             </div>
             <form
+              onChange={() => {
+                if (requestErrorMessage) setRequestErrorMessage('');
+              }}
               onSubmit={handleSubmit(handleRegister)}
               className="flex w-3/5 flex-col gap-9"
             >
@@ -100,14 +102,14 @@ export default function RegisterPage() {
                   {...register('confirmPassword')}
                   type="password"
                 />
-                {hasRequestError && (
+                {!!requestErrorMessage && (
                   <Typography className="text-left text-sm text-red-500">
-                    ❌ Something not work well, try again later.
+                    {requestErrorMessage}
                   </Typography>
                 )}
               </div>
               <Button
-                disabled={hasRequestError}
+                disabled={!!requestErrorMessage}
                 isLoading={isLoading}
                 type="submit"
               >
