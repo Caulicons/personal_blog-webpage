@@ -78,11 +78,11 @@ const Login: FunctionComponent<LoginProps> = () => {
               if (requestErrorMessage) setRequestErrorMessage('');
             }}
             onSubmit={handleSubmit(handleLogin)}
-            className="grid w-full flex-col gap-9 sm:w-3/5"
+            className="grid w-full  gap-9 sm:w-3/5"
           >
             <div className="grid gap-4">
               <LabeledInput
-                value={'root@root5.com'}
+                value={'root@root.com'}
                 error={errors.email?.message || !!requestErrorMessage}
                 label="Email"
                 type="email"

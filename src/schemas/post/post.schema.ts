@@ -8,7 +8,7 @@ export const postSchema = z.object({
   data: z.date(),
   theme: themeSchema,
   photo: z.string(),
-  author: z.object({
+  user: z.object({
     id: z.number(),
     username: z.string().min(1, 'username is required'),
     email: z

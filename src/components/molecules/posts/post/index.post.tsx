@@ -6,75 +6,23 @@ import Typography from '../../../atoms/typography/typography.component';
 import { CircleNotch } from '@phosphor-icons/react';
 import { PostSchema } from '../../../../schemas/post/post.schema';
 import Button from '../../../atoms/button/button.component';
-
-const post: PostSchema = {
-  id: 1,
-  title: 'Lorem ipsum dolor sit amet',
-  content: `This project demonstrates how to create an engaging loading animation using pure CSS.
-The animation features a rotating background color and a loader composed of** 20 spinning dots **that pulsate sequentially. The background hue shifts continuously, creating a dynamic visual effect. Each dot is positioned using CSS variables and animated with keyframes to scale up and down in a rhythmic pattern.
-
-Key Features:
-
-Rotating Background: Smooth color transitions using hue-rotate.
-Pulsating Dots: Sequential animation delays for a wave effect.
-Pure CSS: No JavaScript required, ensuring lightweight performance.
-Usage
-
-Embed the HTML in your webpage.
-Add the CSS to your stylesheet.
-Adjust the number of spans and their styles as needed for different visual effects. This loader is perfect for adding a modern, visually appealing touch to your web projects.
-
-This project demonstrates how to create an engaging loading animation using pure CSS.
-The animation features a rotating background color and a loader composed of** 20 spinning dots **that pulsate sequentially. The background hue shifts continuously, creating a dynamic visual effect. Each dot is positioned using CSS variables and animated with keyframes to scale up and down in a rhythmic pattern.
-
-Key Features:
-
-Rotating Background: Smooth color transitions using hue-rotate.
-Pulsating Dots: Sequential animation delays for a wave effect.
-Pure CSS: No JavaScript required, ensuring lightweight performance.
-Usage
-
-Embed the HTML in your webpage.
-Add the CSS to your stylesheet.
-Adjust the number of spans and their styles as needed for different visual effects. This loader is perfect for adding a modern, visually appealing touch to your web projects.`,
-  data: new Date(),
-  photo: '',
-  theme: {
-    id: 1,
-    name: 'typescript',
-  },
-  author: {
-    id: 1,
-    username: 'john_doe',
-    email: 'john.doe@gmail.com',
-    photo: 'https://picsum.photos/id/1015/100/100',
-  },
-};
+import { getById } from '../../../../services/posts/posts.service';
 
 const Post: FC = () => {
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const month = post.data.toLocaleDateString('en-US', {
-    month: 'long',
-  });
-  const day = post.data.toLocaleDateString('en-US', {
-    day: '2-digit',
-  });
+  const [post, setPost] = useState({} as PostSchema);
 
-  const year = post.data.toLocaleDateString('en-US', {
-    year: 'numeric',
-  });
-
-  const formattedDate = ` ${month} ${day}, ${year}`;
-  /* useEffect(() => {
+  useEffect(() => {
     setIsLoading(true);
-
-    setTimeout(() => {
+    async function getPost() {
+      setPost(await getById(Number(id)));
       setIsLoading(false);
-    }, 2000);
-  }, []); */
-  console.log(post);
+    }
+    getPost();
+  }, [id]);
+
   return (
     <Main
       className={`mx-auto flex h-auto min-h-[calc(100vh-60px)] w-full ${isLoading && 'items-center'} justify-center md:p-2 lg:p-6`}
@@ -92,7 +40,7 @@ const Post: FC = () => {
             </span>
           </Typography>
         </div>
-      ) : (
+      ) : post?.user ? (
         <Container
           tag="section"
           className="grid h-full gap-6 lg:grid-cols-[70%_30%]"
@@ -100,7 +48,10 @@ const Post: FC = () => {
           {/* Post */}
           <div className="h-full w-full rounded-3xl shadow-2xl ">
             {post.photo ? (
-              <img className="w-full md:rounded-t-3xl" src={post.photo} />
+              <img
+                className="bg-ima h-fit w-full md:max-h-[280px] md:rounded-t-3xl"
+                src={post?.photo}
+              />
             ) : (
               <div className=" h-[150px] w-full  bg-orange-500 md:max-h-[240px] md:rounded-t-3xl" />
             )}
@@ -109,7 +60,7 @@ const Post: FC = () => {
               <div className="grid-row-2 grid gap-4">
                 <div className="flex items-center gap-3">
                   <img
-                    src={post.author.photo}
+                    src={post.user.photo}
                     alt=""
                     className="w-10 rounded-full"
                   />
@@ -118,23 +69,23 @@ const Post: FC = () => {
                       variant="p"
                       className="text-sm font-medium text-black"
                     >
-                      {post.author.username}
+                      {post.user.username}
                     </Typography>
                     <Typography tag="p" className=" text-xs text-gray-900 ">
                       Posted on
-                      {formattedDate}
+                      {/* {formattedDate} */}
                     </Typography>
                   </div>
                 </div>
                 <Typography tag="h2" className="text-2xl font-bold md:text-4xl">
-                  {post.title}
+                  {post?.title}
                 </Typography>
                 <Typography
                   tag="p"
                   variant="p"
                   className="my-auto w-fit cursor-pointer rounded-xl bg-gray-200 p-2 py-1 align-middle text-xs font-light"
                 >
-                  {post.theme.name}
+                  {post.theme?.name}
                 </Typography>
               </div>
               {/* Body */}
@@ -155,12 +106,14 @@ const Post: FC = () => {
               <div className=" -z-10  h-[36px] w-full rounded-t-xl bg-blue-600" />
               <div className=" -mt-4 flex gap-2 px-6">
                 <img
-                  src={post.author.photo}
+                  src={post.user.photo}
                   alt=""
                   className="w-12 rounded-full"
+                  width={'40px'}
+                  height={'40px'}
                 />
                 <Typography className="self-end text-xl font-bold">
-                  {post.author.username}
+                  {post.user?.username}
                 </Typography>
               </div>
               <div className="flex flex-col gap-6 px-6 py-8 pt-6">
@@ -182,6 +135,8 @@ const Post: FC = () => {
             </div>
           </div>
         </Container>
+      ) : (
+        <></>
       )}
     </Main>
   );
