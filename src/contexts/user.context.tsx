@@ -9,7 +9,7 @@ export type UserContextSchema = {
   isAuthenticated: boolean;
   update: (user: UserInfoSchema) => void;
   logOut: () => void;
-  isLoading: boolean;
+  //isLoading: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -30,12 +30,12 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  //const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = React.useState<UserInfoSchema>(emptyUser);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   async function checkingToken() {
-    setIsLoading(true);
+    //setIsLoading(true);
 
     const token = Cookies.get('token');
     async function checkingToken(token: string) {
@@ -51,7 +51,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (!token) setIsAuthenticated(false);
     else checkingToken(token);
-    setIsLoading(false);
+    //setIsLoading(false);
   }
 
   function logOut() {
@@ -77,7 +77,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         logOut,
         update,
-        isLoading,
+        //isLoading,
         isAuthenticated,
         setIsAuthenticated,
       }}

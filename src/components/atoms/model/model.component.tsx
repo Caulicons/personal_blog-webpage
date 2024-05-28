@@ -9,9 +9,7 @@ const Model: FC<ModelProps> = () => {
   return (
     <>
       <Header />
-
       <Outlet />
-
       <Footer />
     </>
   );

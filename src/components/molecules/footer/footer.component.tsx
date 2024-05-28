@@ -9,7 +9,7 @@ interface FooterProps {}
 const Footer: FunctionComponent<FooterProps> = () => {
   return (
     <footer className="flex justify-center bg-green-600">
-      <Container className="grid w-1/2 grid-cols-2 items-center p-4 text-center text-white">
+      <Container className="grid w-4/5  items-center gap-4 p-4 text-center text-white sm:grid-cols-2">
         <div>
           <Typography tag="h3" className="text-2xl font-bold ">
             Personal Blog

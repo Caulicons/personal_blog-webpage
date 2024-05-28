@@ -2,6 +2,7 @@ import Nav from './nav/nav.component';
 import Typography from '../../atoms/typography/typography.component';
 import Container from '../../atoms/container/container.component';
 import { quacking } from '../../../utils/quack';
+import Link from '../../atoms/link/link.component';
 
 function Header() {
   return (
@@ -12,7 +13,7 @@ function Header() {
           tag="h4"
           className="cursor-pointer text-xl font-bold"
         >
-          QUACK
+          <Link to="/">QUACK</Link>
         </Typography>
         <Nav />
       </Container>

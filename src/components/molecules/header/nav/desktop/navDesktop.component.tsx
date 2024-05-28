@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import Link from '../../../../atoms/link/link.component';
 import { Stairs } from '@phosphor-icons/react';
 import {
   UserContext,
@@ -11,28 +10,14 @@ const NavDesktop = () => {
     UserContext,
   ) as UserContextSchema;
 
-  const routesLogged = [
-    { id: 2, name: 'Home', path: '/' },
-    { id: 3, name: 'Posts', path: '/posts' },
-  ];
-
-  const routesWithOutLogged = [{ id: 1, name: 'Home', path: '/' }];
-
-  const routes = isAuthenticated ? routesLogged : routesWithOutLogged;
   return (
     <nav>
-      <ul className="flex gap-2">
-        {routes.map(({ name, path, id }) => (
-          <li
-            key={id}
-            className=" p-2 px-2 hover:cursor-pointer hover:font-bold"
-          >
-            <Link to={path}>{name}</Link>
-          </li>
-        ))}
-
+      <ul className="flex items-center gap-2">
         {isAuthenticated && (
           <>
+            <button className="bg-transparece rounded-md border-2 border-white px-4 py-2 font-medium text-white hover:bg-white hover:text-green-600 hover:underline">
+              Create Post
+            </button>
             <li>
               <img
                 className=" h-11 w-11 rounded-full "
@@ -40,6 +25,8 @@ const NavDesktop = () => {
                 alt=""
               />
             </li>
+
+            {/* TODO: The exit button have been in the when click romario photo */}
             <Stairs
               alt="Log Out"
               size={32}
