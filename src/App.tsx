@@ -8,6 +8,7 @@ import Model from './components/atoms/model/model.component';
 import ServerError from './components/pages/serverError/serverError.page';
 import Post from './components/molecules/posts/post/index.post';
 import PostCreate from './components/molecules/posts/postCreate/index.postCreate';
+import PostEdit from './components/molecules/posts/postEdit/index.postEdit';
 
 function App() {
   return (
@@ -19,8 +20,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/posts" Component={loggedOnly(PostsPage)} />
           <Route path="/posts/:id" element={<Post />} />
-          <Route path="/404" element={<ServerError />} />
+          <Route path="/posts/:id/edit" element={<PostEdit />} />
           <Route path="/posts/create" element={<PostCreate />} />
+          <Route path="/404" element={<ServerError />} />
           {/*  />
         <Route path="*" element={<NotFound />} /> */}
         </Route>

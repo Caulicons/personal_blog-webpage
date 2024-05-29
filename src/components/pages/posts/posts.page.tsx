@@ -4,9 +4,8 @@ import Container from '../../atoms/container/container.component';
 import { PostSchema } from '../../../schemas/post/post.schema';
 
 import Posts from '../../molecules/posts/index.posts';
-import { getALlPosts } from '../../../services/posts/posts.service';
-import Typography from '../../atoms/typography/typography.component';
-import { CircleNotch } from '@phosphor-icons/react';
+import { postService } from '../../../services/posts/posts.service';
+import Loading from '../../atoms/loading/index.loading';
 
 interface PostsPageProps {}
 
@@ -15,7 +14,7 @@ const PostsPage: FunctionComponent<PostsPageProps> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     async function getPosts() {
-      setPosts(await getALlPosts());
+      setPosts(await postService.getAll());
       setIsLoading(false);
     }
     getPosts();
@@ -24,18 +23,7 @@ const PostsPage: FunctionComponent<PostsPageProps> = () => {
   return (
     <Main className="flex min-h-screen select-none flex-col items-center gap-4 bg-green-500 p-10">
       {isLoading ? (
-        <div className="mx-auto h-full select-none text-center">
-          <img className="md:w-[500px]" src="/imgs/loading-2.svg" alt="" />
-          <Typography variant="h2" className="  text-2xl font-bold">
-            Loading, Please Wait...
-            <span>
-              <CircleNotch
-                className="w-full  animate-spin fill-white"
-                size={36}
-              />
-            </span>
-          </Typography>
-        </div>
+        <Loading image={2} />
       ) : (
         <Container size="small" className="grid gap-4 sm:grid-cols-[65%_35%]">
           <div className="flex w-full flex-col gap-6 rounded-lg  pt-0">

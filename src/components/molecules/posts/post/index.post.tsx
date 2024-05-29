@@ -1,15 +1,20 @@
-import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { FC, useContext, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import Main from '../../../atoms/main/main.component';
 import Container from '../../../atoms/container/container.component';
 import Typography from '../../../atoms/typography/typography.component';
-import { CircleNotch } from '@phosphor-icons/react';
 import { PostSchema } from '../../../../schemas/post/post.schema';
 import Button from '../../../atoms/button/button.component';
-import { getById } from '../../../../services/posts/posts.service';
+import {
+  UserContext,
+  UserContextSchema,
+} from '../../../../contexts/user.context';
+import { postService } from '../../../../services/posts/posts.service';
+import Loading from '../../../atoms/loading/index.loading';
 
 const Post: FC = () => {
   const { id } = useParams();
+  const { user } = useContext(UserContext) as UserContextSchema;
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [post, setPost] = useState({} as PostSchema);
@@ -17,7 +22,7 @@ const Post: FC = () => {
   useEffect(() => {
     setIsLoading(true);
     async function getPost() {
-      setPost(await getById(Number(id)));
+      setPost(await postService.getById(Number(id)));
       setIsLoading(false);
     }
     getPost();
@@ -28,18 +33,7 @@ const Post: FC = () => {
       className={`mx-auto flex h-auto min-h-[calc(100vh-60px)] w-full ${isLoading && 'items-center'} justify-center md:p-2 lg:p-6`}
     >
       {isLoading ? (
-        <div className="mx-auto h-full select-none text-center">
-          <img className="md:w-[500px]" src="/imgs/loading.svg" alt="" />
-          <Typography variant="h2" className="  text-2xl font-bold">
-            Loading, Please Wait...
-            <span>
-              <CircleNotch
-                className="w-full  animate-spin fill-green-600"
-                size={36}
-              />
-            </span>
-          </Typography>
-        </div>
+        <Loading />
       ) : post?.user ? (
         <Container
           tag="section"
@@ -117,11 +111,18 @@ const Post: FC = () => {
                 </Typography>
               </div>
               <div className="flex flex-col gap-6 px-6 py-8 pt-6">
-                <Button className="w-full">Follow</Button>
+                {post?.user.id === user?.id ? (
+                  <Link to={`/posts/${post.id}/edit`}>
+                    <Button className="w-full">Edit Post</Button>
+                  </Link>
+                ) : (
+                  <Button className="w-full">Follow</Button>
+                )}
                 <Typography
                   variant="p"
                   className="text-justify font-medium text-gray-600"
                 >
+                  {/* TODO: Create a bio in back-end */}
                   {/* {post.author.bio} */}A passionate front-end developer with
                   a Bachelor's degree from Bahria University. My current tech
                   stack includes HTML,CSS,Tailwind,JavaScript, ReactJs, and
