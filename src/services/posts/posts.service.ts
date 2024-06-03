@@ -12,6 +12,7 @@ const getAll = async () => {
   try {
     const res = await api.get<PostSchema[]>('/posts');
     if (res.status !== 200) throw new Error(JSON.stringify(res));
+
     return res.data;
   } catch (e) {
     handleServerError(e);
@@ -48,7 +49,6 @@ const create = async (data: CreatePostSchema) => {
     if (res.status !== 201) throw new Error(JSON.stringify(res));
     return res.data;
   } catch (e) {
-    console.log(e);
     handleServerError(e);
     return <PostSchema>{};
   }
@@ -81,7 +81,6 @@ const exclude = async (id: number) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(res);
     if (res.status !== 200) throw new Error(JSON.stringify(res));
     return res.data;
   } catch (e) {

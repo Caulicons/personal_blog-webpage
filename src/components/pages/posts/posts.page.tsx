@@ -22,13 +22,15 @@ const PostsPage: FunctionComponent<PostsPageProps> = () => {
 
   if (isLoading) return <Loading image={2} />;
   return (
+    /* Edit the comments later */
     <Main className="flex min-h-screen select-none flex-col items-center gap-4 bg-green-500 p-10">
-      <Container size="small" className="grid gap-4 sm:grid-cols-[65%_35%]">
+      <Container size="small" className="grid gap-4">
+        {/*  sm:grid-cols-[65%_35%] */}
         <div className="flex w-full flex-col gap-6 rounded-lg  pt-0">
-          <div className="w-full rounded-lg border-2 border-gray-300 p-2"></div>
+          {/* <div className="w-full rounded-lg border-2 border-gray-300 p-2"></div> */}
           <Posts posts={posts} />
         </div>
-        <div className="hidden h-4/5 w-full rounded-lg border-2 border-gray-300 p-4 sm:block"></div>
+        {/* <div className="hidden h-4/5 w-full rounded-lg border-2 border-gray-300 p-4 sm:block"></div> */}
       </Container>
     </Main>
   );

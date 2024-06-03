@@ -69,10 +69,8 @@ const PostEdit: FC<PostEditProps> = () => {
 
   const handleEditPost = async (data: UpdatePostSchema) => {
     setIsLoading(true);
-    console.log(data);
     const post = await postService.update(data);
     if (post) navigate(`/posts/${post.id}`);
-
     setRequestErrorMessage('❌ Failed to update post. Please try again. ');
     setIsLoading(false);
   };

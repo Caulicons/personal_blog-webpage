@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  //baseURL: 'https://personal-blog-api-cxnr.onrender.com/',
-  baseURL: 'http://localhost:4000/',
+  baseURL: import.meta.env.VITE_URL_API,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

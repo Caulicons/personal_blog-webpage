@@ -12,6 +12,7 @@ import {
 import { postService } from '../../../../services/posts/posts.service';
 import Loading from '../../../atoms/loading/index.loading';
 import { CircleNotch } from '@phosphor-icons/react';
+import { handleServerError } from '../../../../utils/http';
 
 const Post: FC = () => {
   const { id } = useParams();
@@ -74,8 +75,8 @@ const Post: FC = () => {
                 try {
                   await postService.exclude(Number(id));
                   navigate('/posts');
-                } catch (error) {
-                  console.log(error);
+                } catch (e) {
+                  handleServerError(e);
                 }
               }}
             >
