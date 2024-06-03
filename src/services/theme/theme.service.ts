@@ -67,7 +67,6 @@ const exclude = async (id: number) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(res);
     if (res.status !== 200) throw new Error(JSON.stringify(res));
     return res.data;
   } catch (e) {

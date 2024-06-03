@@ -9,7 +9,6 @@ import ServerError from './components/pages/serverError/serverError.page';
 import Post from './components/molecules/posts/post/index.post';
 import PostCreate from './components/molecules/posts/postCreate/index.postCreate';
 import PostEdit from './components/molecules/posts/postEdit/index.postEdit';
-import PostDelete from './components/molecules/posts/postDelete/index.postDelete';
 import RequestError from './components/pages/RequestError/index.requestError';
 import Profile from './components/pages/profile/profile.page';
 
@@ -21,12 +20,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/posts" Component={loggedOnly(PostsPage)} />
+          <Route path="/posts" Component={PostsPage} />
           <Route path="/posts/:id" element={<Post />} />
-          <Route path="/posts/:id/edit" element={<PostEdit />} />
-          <Route path="/posts/create" element={<PostCreate />} />
-          <Route path="/posts/:id/delete" element={<PostDelete />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/posts/:id/edit" Component={loggedOnly(PostEdit)} />
+          <Route path="/posts/create" Component={loggedOnly(PostCreate)} />
+          <Route path="/profile" Component={loggedOnly(Profile)} />
           <Route path="/500" element={<ServerError />} />
           <Route path="/404" element={<RequestError />} />
           <Route path="/401" element={<RequestError />} />
