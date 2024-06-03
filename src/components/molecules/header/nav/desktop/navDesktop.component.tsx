@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Stairs, User } from '@phosphor-icons/react';
+import { Pencil, Stairs, User } from '@phosphor-icons/react';
 import {
   UserContext,
   UserContextSchema,
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import Typography from '../../../../atoms/typography/typography.component';
 
 const NavDesktop = () => {
-  const [userMenu, setUserMenu] = useState(true);
+  const [userMenu, setUserMenu] = useState(false);
   const { isAuthenticated, logOut, user } = useContext(
     UserContext,
   ) as UserContextSchema;
@@ -26,7 +26,10 @@ const NavDesktop = () => {
             </Link>
             <li>
               {user.photo ? (
-                <div className="relative cursor-pointer">
+                <div
+                  className="relative cursor-pointer"
+                  /* Close when lost focus */
+                >
                   <img
                     className=" h-11 w-11 rounded-full bg-slate-500"
                     src={user.photo}
@@ -40,6 +43,7 @@ const NavDesktop = () => {
                       aria-orientation="vertical"
                       aria-labelledby="user-menu-button"
                       tabIndex={-1}
+                      onBlur={() => setUserMenu(false)}
                     >
                       <div className="block px-4 py-2 text-sm text-gray-700">
                         <Link
@@ -57,6 +61,20 @@ const NavDesktop = () => {
                           </div>
                         </Link>
 
+                        <Link
+                          to="/profile"
+                          className="group block px-4 py-2 text-sm "
+                        >
+                          <div className="flex items-center gap-2">
+                            <Pencil
+                              size={24}
+                              className="group-hover:fill-green-600"
+                            />
+                            <Typography className=" font-normal text-gray-800">
+                              My Post
+                            </Typography>
+                          </div>
+                        </Link>
                         <div
                           className="group block px-4 py-2 text-sm"
                           onClick={logOut}

@@ -11,10 +11,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreatePostSchema,
   createPostSchema,
-} from '../../../../schemas/post/createPost.schema';
-import { postService } from '../../../../services/posts/posts.service';
-
+} from '../../../../schemas/post/post.create.schema';
 import { CircleNotch } from '@phosphor-icons/react';
+import LabeledThemeInput from '../../labeledThemeInput/index.labeledThemeInput';
+import { postService } from '../../../../services/posts/posts.service';
 
 interface PostCreateProps {}
 
@@ -26,15 +26,11 @@ const PostCreate: FC<PostCreateProps> = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<CreatePostSchema>({
     resolver: zodResolver(createPostSchema),
-    defaultValues: {
-      // TODO: THEME, edit this letter
-      theme: 1,
-    },
   });
-
   const handlePostCreate = async (data: CreatePostSchema) => {
     setIsLoading(true);
 
@@ -46,7 +42,7 @@ const PostCreate: FC<PostCreateProps> = () => {
   };
 
   return (
-    <Main className="flex min-h-screen flex-col items-center justify-center p-6">
+    <Main className="flex min-h-screen select-none flex-col items-center justify-center p-6">
       <Container
         tag="section"
         size="small"
@@ -69,6 +65,12 @@ const PostCreate: FC<PostCreateProps> = () => {
               className="border-black"
               error={errors.title?.message || !!requestErrorMessage}
               {...register('title')}
+            />
+            <LabeledThemeInput
+              setValue={setValue}
+              label="Theme"
+              error={errors.theme?.message || !!requestErrorMessage}
+              {...register('theme')}
             />
             <LabeledTextArea
               label="Content"

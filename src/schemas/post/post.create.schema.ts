@@ -9,7 +9,7 @@ export const createPostSchema = postSchema
     theme: true,
   })
   .extend({
-    theme: z.number(),
+    theme: z.string().min(1, 'Theme is required'),
   });
 
 export type CreatePostSchema = z.infer<typeof createPostSchema>;

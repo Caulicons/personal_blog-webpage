@@ -82,7 +82,6 @@ const Login: FunctionComponent<LoginProps> = () => {
           >
             <div className="grid gap-4">
               <LabeledInput
-                value={'root@root.com'}
                 error={errors.email?.message || !!requestErrorMessage}
                 label="Email"
                 type="email"

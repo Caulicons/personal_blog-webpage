@@ -9,6 +9,9 @@ import ServerError from './components/pages/serverError/serverError.page';
 import Post from './components/molecules/posts/post/index.post';
 import PostCreate from './components/molecules/posts/postCreate/index.postCreate';
 import PostEdit from './components/molecules/posts/postEdit/index.postEdit';
+import PostDelete from './components/molecules/posts/postDelete/index.postDelete';
+import RequestError from './components/pages/RequestError/index.requestError';
+import Profile from './components/pages/profile/profile.page';
 
 function App() {
   return (
@@ -22,7 +25,11 @@ function App() {
           <Route path="/posts/:id" element={<Post />} />
           <Route path="/posts/:id/edit" element={<PostEdit />} />
           <Route path="/posts/create" element={<PostCreate />} />
-          <Route path="/404" element={<ServerError />} />
+          <Route path="/posts/:id/delete" element={<PostDelete />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/500" element={<ServerError />} />
+          <Route path="/404" element={<RequestError />} />
+          <Route path="/401" element={<RequestError />} />
           {/*  />
         <Route path="*" element={<NotFound />} /> */}
         </Route>

@@ -26,13 +26,17 @@ const getById = async (id: number) => {
   }
 };
 
-const create = async (data: ThemeSchema) => {
+const create = async (name: string) => {
   try {
-    const res = await api.post<ThemeSchema>('/themes', data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await api.post<ThemeSchema>(
+      '/themes',
+      { name },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     if (res.status !== 201) throw new Error(JSON.stringify(res));
     return res.data;
   } catch (e) {
